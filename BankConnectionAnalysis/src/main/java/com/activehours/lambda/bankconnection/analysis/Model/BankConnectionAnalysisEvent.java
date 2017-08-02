@@ -4,6 +4,9 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class BankConnectionAnalysisEvent {
 
+	@JsonProperty("event_type")
+	public int EventType;
+
 	@JsonProperty("provider_type")
 	public int ProviderType;
 
@@ -13,46 +16,46 @@ public class BankConnectionAnalysisEvent {
 	@JsonProperty("total_create_connections")
 	public long TotalCreateConnections;
 
-	@JsonProperty("number_of_successful_create_connections")
+	@JsonProperty("successful_create_connections")
 	public long NumberOfSuccessfulCreateConnections;
 
-	@JsonProperty("number_of_failed_create_connections")
+	@JsonProperty("failed_create_connections")
 	public long NumberOfFailedCreateConnections;
 
-	@JsonProperty("number_of_mfas_after_create_connection")
+	@JsonProperty("mfas_after_create_connection")
 	public long NumberOfMfasAfterCreateConnection;
 
-	@JsonProperty("number_of_non_deterministic_after_create_connection")
+	@JsonProperty("non_deterministic_after_create_connection")
 	public long NumberOfNoDeterministicStateAfterCreateConnection;
 
 	@JsonProperty("total_mfa_connections")
 	public long TotalMfaConnections;
 
-	@JsonProperty("number_of_successful_mfa_connections")
+	@JsonProperty("successful_mfa_connections")
 	public long NumberOfSuccessfulMfaConnections;
 
-	@JsonProperty("number_of_failed_mfa_connections")
+	@JsonProperty("failed_mfa_connections")
 	public long NumberOfFailedMfaConnections;
 
-	@JsonProperty("number_of_mfas_after_submitting_mfa")
+	@JsonProperty("mfas_after_submitting_mfa")
 	public long NumberOfMfasAfterSubmittingMfa;
 
-	@JsonProperty("number_of_non_deterministic_after_submitting_mfa")
+	@JsonProperty("non_deterministic_after_submitting_mfa")
 	public long NumberOfNoDeterministicStateAfterSubmittingMfa;
 
 	@JsonProperty("total_update_connections")
 	public long TotalUpdateConnections;
 
-	@JsonProperty("number_of_successful_update_connections")
+	@JsonProperty("successful_update_connections")
 	public long NumberOfSuccessfulUpdateConnections;
 
-	@JsonProperty("number_of_failed_update_connections")
+	@JsonProperty("failed_update_connections")
 	public long NumberOfFailedUpdateConnections;
 
-	@JsonProperty("number_of_mfas_after_update_connection")
+	@JsonProperty("mfas_after_update_connection")
 	public long NumberOfMfasAfterUpdateConnection;
 
-	@JsonProperty("number_of_non_deterministic_after_update_connection")
+	@JsonProperty("non_deterministic_after_update_connection")
 	public long NumberOfNoDeterministicStateAfterUpdateConnection;
 
 

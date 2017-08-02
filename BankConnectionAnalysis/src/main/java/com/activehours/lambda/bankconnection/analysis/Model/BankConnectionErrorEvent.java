@@ -4,6 +4,9 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class BankConnectionErrorEvent {
 
+	@JsonProperty("event_type")
+	public int EventType;
+
 	@JsonProperty("provider_type")
 	public int ProviderType;
 

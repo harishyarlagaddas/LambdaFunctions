@@ -69,6 +69,5 @@
     <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-elastictranscoder:1.11.124" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.13" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.13" level="project" />
-    <orderEntry type="library" name="AthenaJDBC41-1.1.0" level="project" />
   </component>
 </module>

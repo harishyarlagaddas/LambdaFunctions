@@ -22,33 +22,42 @@ import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.sql.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class HourlyBankConnectionAnalysis implements RequestHandler<Object, String> {
 
-	String mAthenaTableName = "bankconnection_events_db.bankconnection_events";
-    String mAthenaDataS3BucketName = "ah-firehose-bankconnection-events-test";
-    String mKinesisFirehoseDeliveryStreamName = "Test_BankConnectionAnalysis";
+	private static boolean mProductionEnvironment = true;
 
-    String mAthenaAnalysisTableName = "bankconnection_analysis_test_db.bankconnection_analysis_test_1";
-    String mAthenaAnalysisS3BucketName = "ah-firehose-bankconnection-analysis-test";
-	String mAddHourlyAthenaAnalysisPartitionSqlString =
-			"ALTER TABLE "+mAthenaAnalysisTableName+" ADD IF NOT EXISTS PARTITION "
+	// Production Environment Variables..
+	static String PRODUCTION_SOURCE_DATA_ATHENA_TABLE_NAME = "bankconnection_events_db.bankconnection_events_1";
+	static String PRODUCTION_SOURCE_DATA_S3_BUCKET_NAME = "ah-firehose-bankconnection-events-prod";
+	static String PRODUCTION_DESTINATION_DATA_ATHENA_TABLE_NAME_1 = "bankconnection_analysis_db.bankconnection_analysis_prod_1";
+	static String PRODUCTION_DESTINATION_DATA_ATHENA_TABLE_NAME_2 = "bankconnection_analysis_db.bankconnection_error_analysis_1";
+	static String PRODUCTION_DESTINATION_DATA_S3_BUCKET_NAME = "ah-firehose-bankconnection-analysis-prod";
+	static String PRODUCTION_ANALYSED_DATA_KINESIS_FIREHOSE_STREAM = "Prod_BankConnectionAnalysis";
+
+    // Test Environment Variables..
+	static String TEST_SOURCE_DATA_ATHENA_TABLE_NAME = "bankconnection_events_db.bankconnection_events";
+	static String TEST_SOURCE_DATA_S3_BUCKET_NAME = "ah-firehose-bankconnection-events-test";
+	static String TEST_DESTINATION_DATA_ATHENA_TABLE_NAME = "bankconnection_analysis_test_db.bankconnection_analysis_test_2";
+	static String TEST_DESTINATION_DATA_S3_BUCKET_NAME = "ah-firehose-bankconnection-analysis-test";
+	static String TEST_ANALYSED_DATA_KINESIS_FIREHOSE_STREAM = "Test_BankConnectionAnalysis";
+
+    static String DESTINATION_DATA_ATHENA_TABLE_HOURLY_PARTITION_SQL_STRING =
+			"ALTER TABLE %TABLE_NAME ADD IF NOT EXISTS PARTITION "
 					+ "(year=%YY, month=%MM, day=%DD, hour=%HH) "
-					+ "LOCATION \"s3://"+mAthenaAnalysisS3BucketName+"/%YY/%MM/%DD/%HH/\"";
+					+ "LOCATION \"s3://%BUCKET_NAME/%YY/%MM/%DD/%HH/\"";
 
-    String mGetAllEventsSqlString = "SELECT * FROM "+mAthenaTableName+" WHERE year=%YY AND month=%MM AND day=%DD AND hour=%HH";
+    String SOURCE_DATA_ATHENA_TABLE_GET_ALL_EVENTS_SQL_STRING =
+			"SELECT * FROM "+getSourceDataAthenaTableName()+" WHERE year=%YY AND month=%MM AND day=%DD AND hour=%HH";
 
-    String mAddHourlyPartitionSqlString = 
-    		"ALTER TABLE "+mAthenaTableName+" ADD IF NOT EXISTS PARTITION "
+    String SOURCE_DATA_ATHENA_TABLE_HOURLY_PARTITION_SQL_STRING =
+    		"ALTER TABLE "+getSourceDataAthenaTableName()+" ADD IF NOT EXISTS PARTITION "
     				+ "(year=%YY, month=%MM, day=%DD, hour=%HH) "
-    				+ "LOCATION \"s3://"+mAthenaDataS3BucketName+"/%YY/%MM/%DD/%HH/\"";
+    				+ "LOCATION \"s3://"+getSourceDataS3BucketName()+"/%YY/%MM/%DD/%HH/\"";
     
     AmazonKinesisFirehose mFirehose = AmazonKinesisFirehoseClientBuilder.standard()
 			.withEndpointConfiguration(
@@ -58,7 +67,50 @@ public class HourlyBankConnectionAnalysis implements RequestHandler<Object, Stri
     public HourlyBankConnectionAnalysis() {
     	
     }
-    
+
+    private static String getSourceDataAthenaTableName() {
+    	if (mProductionEnvironment) {
+    		return PRODUCTION_SOURCE_DATA_ATHENA_TABLE_NAME;
+		} else {
+    		return TEST_SOURCE_DATA_ATHENA_TABLE_NAME;
+		}
+	}
+
+	private static String getSourceDataS3BucketName() {
+    	if (mProductionEnvironment) {
+    		return PRODUCTION_SOURCE_DATA_S3_BUCKET_NAME;
+		} else {
+    		return TEST_SOURCE_DATA_S3_BUCKET_NAME;
+		}
+	}
+
+	private static String getDestinationDataS3BucketName() {
+    	if (mProductionEnvironment) {
+    		return PRODUCTION_DESTINATION_DATA_S3_BUCKET_NAME;
+		} else {
+    		return TEST_DESTINATION_DATA_S3_BUCKET_NAME;
+		}
+	}
+
+	private static String getDesitnationDataKinesisFirehoseStream() {
+    	if (mProductionEnvironment) {
+    		return PRODUCTION_ANALYSED_DATA_KINESIS_FIREHOSE_STREAM;
+		} else {
+    		return TEST_ANALYSED_DATA_KINESIS_FIREHOSE_STREAM;
+		}
+	}
+
+	private Map<String, String> getDestinationPartitionsMap() {
+    	HashMap<String, String> partitionMap = new HashMap<String, String>();
+    	if (mProductionEnvironment) {
+    		partitionMap.put(PRODUCTION_DESTINATION_DATA_ATHENA_TABLE_NAME_1, PRODUCTION_DESTINATION_DATA_S3_BUCKET_NAME);
+			partitionMap.put(PRODUCTION_DESTINATION_DATA_ATHENA_TABLE_NAME_2, PRODUCTION_DESTINATION_DATA_S3_BUCKET_NAME);
+		} else {
+    		partitionMap.put(TEST_DESTINATION_DATA_ATHENA_TABLE_NAME, TEST_DESTINATION_DATA_S3_BUCKET_NAME);
+		}
+		return partitionMap;
+	}
+
     @Override
     public String handleRequest(Object input, Context context) {
     	LambdaLogger logger = context.getLogger();
@@ -90,7 +142,7 @@ public class HourlyBankConnectionAnalysis implements RequestHandler<Object, Stri
             logger.log("Got the Athena Connection\n");
             
             
-        	String hourlyPartitionSqlStr = mAddHourlyPartitionSqlString
+        	String hourlyPartitionSqlStr = SOURCE_DATA_ATHENA_TABLE_HOURLY_PARTITION_SQL_STRING
         								   .replaceAll("%YY", year)
         								   .replaceAll("%MM", month)
         								   .replaceAll("%DD", day)
@@ -99,20 +151,27 @@ public class HourlyBankConnectionAnalysis implements RequestHandler<Object, Stri
         	executeAthenaStatement(connection, hourlyPartitionSqlStr, logger);
         	logger.log("Creation of hourly partition succeeded.");
 
-			String s3FolderName = s3Year+"/"+s3Month+"/"+s3Day+"/"+s3Hour+"/";
-			createS3Folder(mAthenaAnalysisS3BucketName,s3FolderName);
+			for (Map.Entry<String, String> entry : getDestinationPartitionsMap().entrySet()) {
+				String tableName = entry.getKey();
+				String bucketName = entry.getValue();
 
-        	// Add hourly partition to Athena Analysis table.
-			String hourlyPartitionAthenaAnalysisSqlStr = mAddHourlyAthenaAnalysisPartitionSqlString
-					.replaceAll("%YY", s3Year)
-					.replaceAll("%MM", s3Month)
-					.replaceAll("%DD", s3Day)
-					.replaceAll("%HH", s3Hour);
-			logger.log("Creating the hourly partition for athena analysis table. hourlyPartitionSqlStr: "+hourlyPartitionSqlStr);
-			executeAthenaStatement(connection, hourlyPartitionAthenaAnalysisSqlStr, logger);
-			logger.log("Creation of hourly partition for athena analysis table succeeded.");
+				String s3FolderName = s3Year + "/" + s3Month + "/" + s3Day + "/" + s3Hour + "/";
+				createS3Folder(getDestinationDataS3BucketName(), s3FolderName, logger);
 
-        	String getAllEventsSqlStr = mGetAllEventsSqlString
+				// Add hourly partition to Athena Analysis table.
+				String hourlyPartitionAthenaAnalysisSqlStr = DESTINATION_DATA_ATHENA_TABLE_HOURLY_PARTITION_SQL_STRING
+						.replaceAll("%TABLE_NAME", tableName)
+						.replaceAll("%BUCKET_NAME", bucketName)
+						.replaceAll("%YY", s3Year)
+						.replaceAll("%MM", s3Month)
+						.replaceAll("%DD", s3Day)
+						.replaceAll("%HH", s3Hour);
+				logger.log("Creating the hourly partition for athena analysis table. hourlyPartitionSqlStr: " + hourlyPartitionSqlStr);
+				executeAthenaStatement(connection, hourlyPartitionAthenaAnalysisSqlStr, logger);
+				logger.log("Creation of hourly partition for athena analysis table succeeded.");
+			}
+
+        	String getAllEventsSqlStr = SOURCE_DATA_ATHENA_TABLE_GET_ALL_EVENTS_SQL_STRING
 										.replaceAll("%YY", year)
 										.replaceAll("%MM", month)
 										.replaceAll("%DD", day)
@@ -167,6 +226,7 @@ public class HourlyBankConnectionAnalysis implements RequestHandler<Object, Stri
 		for(ProviderType provider: ProviderType.values()) {
 			logger.log("Getting the connection analysis for provider: "+provider);
 			BankConnectionAnalysisEvent overallAnalysisEvent = new BankConnectionAnalysisEvent();
+			overallAnalysisEvent.EventType = BankConnectionEventType.ConnectionEvent.getVal();
 			overallAnalysisEvent.ProviderType = provider.getVal();
 			overallAnalysisEvent.FinancialInstitutionId = finanacialInstitutionId;
 			List<BankConnectionEvent> eventList = events;
@@ -177,11 +237,9 @@ public class HourlyBankConnectionAnalysis implements RequestHandler<Object, Stri
 				eventList = eventStream.collect(Collectors.toList());
 			}
 
-			if (ProviderType.All != provider) {
-				Stream<BankConnectionEvent> eventStream = eventList.stream()
-						.filter(event -> event.BankFeedProvider == provider.getVal());
-				eventList = eventStream.collect(Collectors.toList());
-			}
+			Stream<BankConnectionEvent> eventStream = eventList.stream()
+					.filter(event -> event.BankFeedProvider == provider.getVal());
+			eventList = eventStream.collect(Collectors.toList());
 
 			if (eventList.size() > 0) {
 				for (ConnectionType connectionType : ConnectionType.values()) {
@@ -193,10 +251,10 @@ public class HourlyBankConnectionAnalysis implements RequestHandler<Object, Stri
 					overallAnalysisEvent.setTotalConnections(connectionType, size);
 
 					//Successful Connections
-					Stream<BankConnectionEvent> successfulCOnnections =
+					Stream<BankConnectionEvent> successfulConnections =
 							eventList.stream().filter(event -> event.ConnectionType == connectionType.getVal()
 									&& event.Status == ConnectionStatus.Success.getVal());
-					size = successfulCOnnections.count();
+					size = successfulConnections.count();
 					logger.log("Total Number of successful connection state: "+connectionType+" Connections: " +size);
 					overallAnalysisEvent.setSuccessfulConnections(connectionType, size);
 
@@ -214,7 +272,7 @@ public class HourlyBankConnectionAnalysis implements RequestHandler<Object, Stri
 									&& event.Status == ConnectionStatus.PendingDeterministicStatus.getVal());
 					size = nonDeterministicConnections.count();
 					logger.log("Total Number of non deterministic connection state: "+connectionType+" Connections: " +size);
-					overallAnalysisEvent.setFailureConnections(connectionType, size);
+					overallAnalysisEvent.setNonDeterministicConnections(connectionType, size);
 
 					//MFA Connections
 					Stream<BankConnectionEvent> mfaConnections =
@@ -222,63 +280,64 @@ public class HourlyBankConnectionAnalysis implements RequestHandler<Object, Stri
 									&& event.Status == ConnectionStatus.Mfa.getVal());
 					size = mfaConnections.count();
 					logger.log("Total Number of Mfa connection state: "+connectionType+" Connections: " +size);
-					overallAnalysisEvent.setFailureConnections(connectionType, size);
+					overallAnalysisEvent.setMfaConnections(connectionType, size);
 				}
 			}
 			SendEventToKinesisFirehose(overallAnalysisEvent, logger);
 		}
 	}
 
-	private void analyzeErrorCodes(List<BankConnectionEvent> events, String errorCode, int financialInsId,
+	protected void analyzeErrorCodes(List<BankConnectionEvent> events, String errorCode, int financialInsId,
 								   LambdaLogger logger) {
 
 		for(ProviderType provider: ProviderType.values()) {
-			logger.log("Getting the connection analysis for provider: " + provider);
+			logger.log("Getting the Error analysis for ErrorCode: "+errorCode
+					+ " provider: " + provider+" and FinancialInsID: "+financialInsId);
 			BankConnectionErrorEvent errorEvent = new BankConnectionErrorEvent();
+			errorEvent.EventType = BankConnectionEventType.ErrorEvent.getVal();
 			errorEvent.ProviderType = provider.getVal();
 			errorEvent.FinancialInstitutionId = financialInsId;
 			errorEvent.ErrorCode = errorCode;
 			List<BankConnectionEvent> eventList = events;
-			Supplier<Stream<BankConnectionEvent>> eventStreamSupplier;
+
 			if (0 < financialInsId) {
 				Stream<BankConnectionEvent> eventStream = eventList.stream()
 						.filter(event -> event.FinancialInstitutionId == financialInsId);
 				eventList = eventStream.collect(Collectors.toList());
 			}
 
-			if (ProviderType.All != provider) {
-				Stream<BankConnectionEvent> eventStream = eventList.stream()
-						.filter(event -> event.BankFeedProvider == provider.getVal());
-				eventList = eventStream.collect(Collectors.toList());
-			}
+			Stream<BankConnectionEvent> eventStream = eventList.stream()
+					.filter(event -> event.BankFeedProvider == provider.getVal());
+			eventList = eventStream.collect(Collectors.toList());
+
 
 			if (eventList.size() > 0) {
 				// Total error count..
 				Stream<BankConnectionEvent> errorCount =
-						eventList.stream().filter(event -> event.ErrorCode == errorCode);
+						eventList.stream().filter(event -> errorCode.equals(event.ErrorCode));
 				long size = errorCount.count();
-				logger.log("Total Number of errors " + size + " with provider: " + provider + " and financial institution id: " + financialInsId);
+				logger.log("Total Number of errors: " + size + " with provider: " + provider);
 				errorEvent.ErrorCount = size;
 
 				// Total create connections..
 				Stream<BankConnectionEvent> totalCreateConnections =
 						eventList.stream().filter(event -> event.ConnectionType == ConnectionType.Create.getVal());
 				size = totalCreateConnections.count();
-				logger.log("Total Number of create connections " + size + " with provider: " + provider + " and financial institution id: " + financialInsId);
+				logger.log("Total Number of create connections " + size + " with provider: " + provider);
 				errorEvent.TotalNumberOfCreateConnections = size;
 
 				// Total update connections..
 				Stream<BankConnectionEvent> totalUpdateConnections =
 						eventList.stream().filter(event -> event.ConnectionType == ConnectionType.Update.getVal());
 				size = totalUpdateConnections.count();
-				logger.log("Total Number of update connections " + size + " with provider: " + provider + " and financial institution id: " + financialInsId);
+				logger.log("Total Number of update connections " + size + " with provider: " + provider);
 				errorEvent.TotalNumberOfUpdateConnections = size;
 
 				// Total mfa connections..
 				Stream<BankConnectionEvent> totalMfaConnections =
 						eventList.stream().filter(event -> event.ConnectionType == ConnectionType.Mfa.getVal());
 				size = totalMfaConnections.count();
-				logger.log("Total Number of Mfa connections " + size + " with provider: " + provider + " and financial institution id: " + financialInsId);
+				logger.log("Total Number of Mfa connections " + size + " with provider: " + provider);
 				errorEvent.TotalNumberOfSubmittingMfaAnswers = size;
 			}
 			SendEventToKinesisFirehose(errorEvent,logger);
@@ -330,27 +389,33 @@ public class HourlyBankConnectionAnalysis implements RequestHandler<Object, Stri
 		return bankConnectionEventList;
 	}
 
-	public void createS3Folder(String bucketName, String folderName) {
-		AmazonS3 client = AmazonS3ClientBuilder.defaultClient();
-		// create meta-data for your folder and set content-length to 0
-		ObjectMetadata metadata = new ObjectMetadata();
-		metadata.setContentLength(0);
+	public void createS3Folder(String bucketName, String folderName, LambdaLogger logger) {
+		String key = folderName + UUID.randomUUID().toString();
+    	try {
+			AmazonS3 client = AmazonS3ClientBuilder.defaultClient();
+			// create meta-data for your folder and set content-length to 0
+			ObjectMetadata metadata = new ObjectMetadata();
+			metadata.setContentLength(0);
 
-		// create empty content
-		InputStream emptyContent = new ByteArrayInputStream(new byte[0]);
+			// create empty content
+			InputStream emptyContent = new ByteArrayInputStream(new byte[0]);
 
-		// create a PutObjectRequest passing the folder name suffixed by /
-		PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,
-				folderName + ".temp", emptyContent, metadata);
+			// create a PutObjectRequest passing the folder name suffixed by /
+			PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,
+					key, emptyContent, metadata);
 
-		// send request to S3 to create folder
-		client.putObject(putObjectRequest);
+			// send request to S3 to create folder
+			client.putObject(putObjectRequest);
+			logger.log("Successfully created S3 Folder. FolderName: " +key);
+		}catch (Exception ex) {
+    		logger.log("Exception while creating the S3 Folder. FolderName: "+key+" Exception: "+ex);
+		}
 	}
 
     private void SendEventToKinesisFirehose(Object event, LambdaLogger logger) {
     	try {
     		PutRecordRequest putRecordRequest = new PutRecordRequest();
-        	putRecordRequest.setDeliveryStreamName(mKinesisFirehoseDeliveryStreamName);
+        	putRecordRequest.setDeliveryStreamName(getDesitnationDataKinesisFirehoseStream());
         	
         	ObjectMapper mapper = new ObjectMapper();
         	Record record = new Record();
