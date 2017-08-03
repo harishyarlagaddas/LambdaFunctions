@@ -13,6 +13,9 @@ public class BankConnectionAnalysisEvent {
 	@JsonProperty("financial_ins_id")
 	public int FinancialInstitutionId;
 
+	@JsonProperty("financial_ins_name")
+	public int FinancialInstitutionName;
+
 	@JsonProperty("total_create_connections")
 	public long TotalCreateConnections;
 

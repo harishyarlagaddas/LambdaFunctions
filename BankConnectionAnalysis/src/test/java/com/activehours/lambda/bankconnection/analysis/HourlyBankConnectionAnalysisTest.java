@@ -1,22 +1,22 @@
 package com.activehours.lambda.bankconnection.analysis;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.activehours.lambda.bankconnection.analysis.Model.BankConnectionEvent;
+import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
-import jdk.nashorn.internal.parser.JSONParser;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.amazonaws.services.lambda.runtime.Context;
+import java.io.IOException;
+import java.math.RoundingMode;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A simple test harness for locally invoking your Lambda function handler.
@@ -51,9 +51,27 @@ public class HourlyBankConnectionAnalysisTest {
         Assert.assertEquals("Hello from Lambda!", output);
     }
 
-    //@Test
+    @Test
     public void testErrorCodeAnalysis() {
         try {
+            DecimalFormat mFormat= new DecimalFormat("00");
+            mFormat.setRoundingMode(RoundingMode.DOWN);
+
+            Calendar calInEst = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"));
+            calInEst.add(Calendar.HOUR_OF_DAY,-1);
+
+            calInEst.set(Calendar.MINUTE, 00);
+            calInEst.set(Calendar.SECOND, 00);
+            calInEst.set(Calendar.MILLISECOND, 000);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+            String fromDateStr = dateFormat.format(calInEst.getTime());
+
+            calInEst.set(Calendar.MINUTE, 59);
+            calInEst.set(Calendar.SECOND, 59);
+            calInEst.set(Calendar.MILLISECOND, 999);
+            String toDateStr = dateFormat.format(calInEst.getTime());
+
             byte[] encoded = Files.readAllBytes(Paths.get("C:\\Users\\haris\\Downloads\\test_input.txt"));
             String input = new String(encoded);
 

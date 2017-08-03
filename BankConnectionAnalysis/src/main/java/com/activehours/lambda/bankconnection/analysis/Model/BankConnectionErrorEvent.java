@@ -1,5 +1,6 @@
 package com.activehours.lambda.bankconnection.analysis.Model;
 
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class BankConnectionErrorEvent {
@@ -27,4 +28,9 @@ public class BankConnectionErrorEvent {
 
 	@JsonProperty("total_mfa_connections")
 	public long TotalNumberOfSubmittingMfaAnswers;
+
+	public enum ErrorType{
+		ProviderError,
+		ConnectionState
+	}
 }
