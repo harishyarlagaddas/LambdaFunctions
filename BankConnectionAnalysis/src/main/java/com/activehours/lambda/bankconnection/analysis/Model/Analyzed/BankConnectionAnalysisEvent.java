@@ -1,5 +1,6 @@
-package com.activehours.lambda.bankconnection.analysis.Model;
+package com.activehours.lambda.bankconnection.analysis.Model.Analyzed;
 
+import com.activehours.lambda.bankconnection.analysis.Model.Incoming.ConnectionType;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class BankConnectionAnalysisEvent {

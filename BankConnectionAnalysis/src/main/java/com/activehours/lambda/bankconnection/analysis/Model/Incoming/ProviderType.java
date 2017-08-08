@@ -1,4 +1,4 @@
-package com.activehours.lambda.bankconnection.analysis.Model;
+package com.activehours.lambda.bankconnection.analysis.Model.Incoming;
 
 public enum ProviderType {
     All(0),
