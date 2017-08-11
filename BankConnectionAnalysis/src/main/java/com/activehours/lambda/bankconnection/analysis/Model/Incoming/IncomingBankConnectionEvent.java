@@ -1,5 +1,6 @@
 package com.activehours.lambda.bankconnection.analysis.Model.Incoming;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class IncomingBankConnectionEvent {
@@ -35,7 +36,7 @@ public class IncomingBankConnectionEvent {
     public long UserProvidedBankConnectionId;
     public long BfpProvidedBankConnectionId;
     public String ConnectionState;
-    public Date EventCreationTime;
+    public Timestamp EventCreationTime;
 
     public int getFinancialInstitutionId() {
         return FinancialInstitutionId;
@@ -48,4 +49,6 @@ public class IncomingBankConnectionEvent {
     public String getConnectionState() {
         return ConnectionState;
     }
+
+    public int getBankFeedProvider() { return BankFeedProvider;}
 }

@@ -52,7 +52,7 @@ public class S3Uploader {
 
     public void FinalizeAndAddPartition(Connection connection) {
         writeToS3(mS3ObjectList);
-        addPartition(connection);
+        //addPartition(connection);
     }
 
     public void uploadEvent(Object s3Event){
