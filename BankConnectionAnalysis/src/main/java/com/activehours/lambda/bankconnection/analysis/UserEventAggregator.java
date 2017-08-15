@@ -1,8 +1,7 @@
-package com.activehours.lambda.bankconnection.analysis.Analyzers;
+package com.activehours.lambda.bankconnection.analysis;
 
-import com.activehours.lambda.bankconnection.analysis.AthenaUtils;
-import com.activehours.lambda.bankconnection.analysis.Model.Incoming.IncomingBankConnectionEvent;
-import com.activehours.lambda.bankconnection.analysis.S3Uploader;
+import com.activehours.lambda.bankconnection.analysis.Analyzers.UserEventsAnalyzer;
+import com.activehours.lambda.bankconnection.analysis.Model.BankConnectionEvent;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 
 import java.io.PrintWriter;
@@ -15,24 +14,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class AggregateUserEventsAnalyzer {
+public class UserEventAggregator {
     // Production Environment Variables..
-    static String PRODUCTION_SOURCE_DATA_ATHENA_TABLE_NAME = "bankconnection_events_db.bankconnection_events_prod_2";
-    static String PRODUCTION_SOURCE_DATA_S3_BUCKET_NAME = "ah-firehose-bankconnection-events-prod";
+    static String PRODUCTION_DESTINATION_DATA_ATHENA_TABLE_NAME =
+            "bankconnection_analysis_db.bankconnection_analysis_prod_3";
+    static String PRODUCTION_DESTINATION_DATA_S3_BUCKET_NAME = "ah-firehose-bankconnection-analysis-prod";
 
     // Test Environment Variables..
-    static String TEST_SOURCE_DATA_ATHENA_TABLE_NAME = "bankconnection_events_db.bankconnection_events";
-    static String TEST_SOURCE_DATA_S3_BUCKET_NAME = "ah-firehose-bankconnection-events-test";
+    static String TEST_DESTINATION_DATA_ATHENA_TABLE_NAME =
+            "bankconnection_analysis_db.bankconnection_analysis_test_1";
+    static String TEST_DESTINATION_DATA_S3_BUCKET_NAME = "ah-firehose-bankconnection-analysis-test";
 
     static String ATHENA_GET_ALL_USERS_SQL_STRING =
-            "SELECT DISTINCT "+IncomingBankConnectionEvent.COLUMN_NAME_USERID
+            "SELECT DISTINCT "+ BankConnectionEvent.COLUMN_NAME_USERID
                     +" FROM "+AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_TABLE_NAME
                     +" WHERE year IN ("
                     + AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_YEAR+") AND month IN ("
                     +AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_MONTH+") AND day IN ("
                     +AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_DAY+") AND hour IN ("
                     +AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_HOUR+") AND "
-                    + IncomingBankConnectionEvent.COLUMN_NAME_EVENT_CREATION_TIME
+                    + BankConnectionEvent.COLUMN_NAME_EVENT_CREATION_TIME
                     +" BETWEEN timestamp '"
                     +AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_FROM_TIME+"' AND timestamp '"
                     +AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_TO_TIME+"'";
@@ -44,7 +45,7 @@ public class AggregateUserEventsAnalyzer {
             +AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_MONTH+") AND day IN ("
             +AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_DAY+") AND hour IN ("
             +AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_HOUR+") AND "
-            +IncomingBankConnectionEvent.COLUMN_NAME_USERID+" IN ("
+            + BankConnectionEvent.COLUMN_NAME_USERID+" IN ("
             +AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_USER_IDS+")";
 
     private static int ATHENA_EVENTS_FETCH_USER_SIZE = 50;
@@ -53,7 +54,7 @@ public class AggregateUserEventsAnalyzer {
     private Connection mConnection;
     private LambdaLogger mLogger;
 
-    public AggregateUserEventsAnalyzer(Connection connection, boolean isProductionEnv, LambdaLogger logger) {
+    public UserEventAggregator(Connection connection, boolean isProductionEnv, LambdaLogger logger) {
         mConnection = connection;
         mProductionEnvironment = isProductionEnv;
         mLogger = logger;
@@ -63,7 +64,8 @@ public class AggregateUserEventsAnalyzer {
         try {
             List<Long> totalUserList = retrieveUsersFromAthena();
             mLogger.log("Users: "+constructStringFromUserIds(totalUserList));
-            S3Uploader s3Uploader = new S3Uploader(null,TEST_SOURCE_DATA_S3_BUCKET_NAME, mLogger);
+            S3Uploader s3Uploader = new S3Uploader(
+                    getDestinationDataAthenaTableName(),getDestinationDataS3BucketName(), mLogger);
             UserEventsAnalyzer userEventsAnalyzer = new UserEventsAnalyzer(s3Uploader);
             int index = 0;
             do {
@@ -73,16 +75,16 @@ public class AggregateUserEventsAnalyzer {
                 }
 
                 List<Long> userList = totalUserList.subList(index, endIndex);
-                List<IncomingBankConnectionEvent> eventList = retrieveUserEventsFromAthena(userList);
+                List<BankConnectionEvent> eventList = retrieveUserEventsFromAthena(userList);
                 for (long user: userList) {
-                    List<IncomingBankConnectionEvent> userEventList = filterUserEvents(eventList, user);
+                    List<BankConnectionEvent> userEventList = filterUserEvents(eventList, user);
                     userEventsAnalyzer.AnalyzeEvents(userEventList, mConnection, mLogger);
                 }
                 index+=userList.size();
             }while (index < totalUserList.size());
             s3Uploader.FinalizeAndAddPartition(mConnection);
         }catch (Exception ex) {
-            mLogger.log("Exception while analyzing events in AggregateUserEventsAnalyzer. Exception: "+getStacktraceToString(ex));
+            mLogger.log("Exception while analyzing events in UserEventAggregator. Exception: "+getStacktraceToString(ex));
         }
     }
 
@@ -93,20 +95,21 @@ public class AggregateUserEventsAnalyzer {
         return sw.toString();
     }
 
-    private List<IncomingBankConnectionEvent> filterUserEvents(
-            List<IncomingBankConnectionEvent> eventList, long userId) {
-        Stream<IncomingBankConnectionEvent> eventStream = eventList.stream()
+    private List<BankConnectionEvent> filterUserEvents(
+            List<BankConnectionEvent> eventList, long userId) {
+        Stream<BankConnectionEvent> eventStream = eventList.stream()
                 .filter(event -> event.UserId == userId);
-        List<IncomingBankConnectionEvent> filteredList = eventStream.collect(Collectors.toList());
+        List<BankConnectionEvent> filteredList = eventStream.collect(Collectors.toList());
         mLogger.log("For user: "+userId+" EventList Count: "+filteredList.size());
         return filteredList;
     }
 
-    private List<IncomingBankConnectionEvent> retrieveUserEventsFromAthena(
+    private List<BankConnectionEvent> retrieveUserEventsFromAthena(
             List<Long> users) throws SQLException {
 
         String getEventsSqlStr = ATHENA_GET_EVENTS_FOR_USERS_SQL_STRING
-                .replaceAll(AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_TABLE_NAME, getSourceDataAthenaTableName());
+                .replaceAll(AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_TABLE_NAME,
+                        HourlyBankConnectionAnalysis.getSourceDataAthenaTableName());
 
         getEventsSqlStr = AthenaUtils
                 .FillHourlyPartitionsInSqlStatement(getEventsSqlStr);
@@ -114,14 +117,15 @@ public class AggregateUserEventsAnalyzer {
         getEventsSqlStr = getEventsSqlStr.replaceAll(AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_USER_IDS,
                 constructStringFromUserIds(users));
         ResultSet result = AthenaUtils.executeAthenaStatement(mConnection, getEventsSqlStr, mLogger);
-        List<IncomingBankConnectionEvent> eventList =
+        List<BankConnectionEvent> eventList =
                 AthenaUtils.ParseResultSetForBankConnectionEvents(result);
         return eventList;
     }
 
     private List<Long> retrieveUsersFromAthena() throws SQLException {
         String getAllUsersSqlStr = ATHENA_GET_ALL_USERS_SQL_STRING
-                .replaceAll(AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_TABLE_NAME, getSourceDataAthenaTableName());
+                .replaceAll(AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_TABLE_NAME,
+                        HourlyBankConnectionAnalysis.getSourceDataAthenaTableName());
 
         getAllUsersSqlStr = AthenaUtils
                 .FillHourlyPartitionsInSqlStatement(getAllUsersSqlStr);
@@ -131,7 +135,7 @@ public class AggregateUserEventsAnalyzer {
         ResultSet result = AthenaUtils.executeAthenaStatement(mConnection, getAllUsersSqlStr, mLogger);
         List<Long> userList = new ArrayList<Long>();
         while(result.next()) {
-            long userId = result.getLong(IncomingBankConnectionEvent.COLUMN_NAME_USERID);
+            long userId = result.getLong(BankConnectionEvent.COLUMN_NAME_USERID);
             userList.add(userId);
         }
         mLogger.log("Retrieved total users count: "+userList.size());
@@ -149,19 +153,19 @@ public class AggregateUserEventsAnalyzer {
         return builder.toString();
     }
 
-    private String getSourceDataAthenaTableName() {
+    private String getDestinationDataAthenaTableName() {
         if (mProductionEnvironment) {
-            return PRODUCTION_SOURCE_DATA_ATHENA_TABLE_NAME;
+            return PRODUCTION_DESTINATION_DATA_ATHENA_TABLE_NAME;
         } else {
-            return TEST_SOURCE_DATA_ATHENA_TABLE_NAME;
+            return TEST_DESTINATION_DATA_ATHENA_TABLE_NAME;
         }
     }
 
-    private String getSourceDataS3BucketName() {
+    private String getDestinationDataS3BucketName() {
         if (mProductionEnvironment) {
-            return PRODUCTION_SOURCE_DATA_S3_BUCKET_NAME;
+            return PRODUCTION_DESTINATION_DATA_S3_BUCKET_NAME;
         } else {
-            return TEST_SOURCE_DATA_S3_BUCKET_NAME;
+            return TEST_DESTINATION_DATA_S3_BUCKET_NAME;
         }
     }
 }

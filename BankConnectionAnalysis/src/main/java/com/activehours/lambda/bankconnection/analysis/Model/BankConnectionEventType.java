@@ -1,4 +1,4 @@
-package com.activehours.lambda.bankconnection.analysis.Model.Incoming;
+package com.activehours.lambda.bankconnection.analysis.Model;
 
 public enum BankConnectionEventType {
     ConnectionEvent (1),

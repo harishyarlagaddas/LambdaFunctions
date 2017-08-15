@@ -1,6 +1,6 @@
 package com.activehours.lambda.bankconnection.analysis;
 
-import com.activehours.lambda.bankconnection.analysis.Model.Incoming.IncomingBankConnectionEvent;
+import com.activehours.lambda.bankconnection.analysis.Model.BankConnectionEvent;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -75,17 +75,17 @@ public class HourlyBankConnectionAnalysisTest {
             String input = new String(encoded);
 
             ObjectMapper mapper = new ObjectMapper();
-            IncomingBankConnectionEvent[] events = mapper.readValue(input, IncomingBankConnectionEvent[].class);
-            ArrayList<IncomingBankConnectionEvent> eventList = new ArrayList<IncomingBankConnectionEvent>(Arrays.asList(events));
+            BankConnectionEvent[] events = mapper.readValue(input, BankConnectionEvent[].class);
+            ArrayList<BankConnectionEvent> eventList = new ArrayList<BankConnectionEvent>(Arrays.asList(events));
 
             HourlyBankConnectionAnalysis analysis = new HourlyBankConnectionAnalysis();
 
             //Get connections stats for each of the financial institution id
             List<Integer> financialInsIds = eventList.stream().map(
-                    IncomingBankConnectionEvent::getFinancialInstitutionId).distinct().collect(Collectors.toList());
+                    BankConnectionEvent::getFinancialInstitutionId).distinct().collect(Collectors.toList());
 
             List<String> errorCodes = eventList.stream().map(
-                    IncomingBankConnectionEvent::getErrorCode).distinct().collect(Collectors.toList());
+                    BankConnectionEvent::getErrorCode).distinct().collect(Collectors.toList());
             for(String errorCode: errorCodes) {
                 if (null == errorCode) {
                     continue;

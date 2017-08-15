@@ -1,6 +1,6 @@
 package com.activehours.lambda.bankconnection.analysis;
 
-import com.activehours.lambda.bankconnection.analysis.Model.Incoming.IncomingBankConnectionEvent;
+import com.activehours.lambda.bankconnection.analysis.Model.BankConnectionEvent;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 
 import java.math.RoundingMode;
@@ -115,39 +115,39 @@ public class AthenaUtils {
                 .replaceAll(SQL_STATEMENT_PLACE_HOLDER_TO_TIME, toDateStr);
     }
 
-    public static List<IncomingBankConnectionEvent> ParseResultSetForBankConnectionEvents(
+    public static List<BankConnectionEvent> ParseResultSetForBankConnectionEvents(
             ResultSet resultSet) throws SQLException {
-        List<IncomingBankConnectionEvent> eventList = new ArrayList<IncomingBankConnectionEvent>();
+        List<BankConnectionEvent> eventList = new ArrayList<BankConnectionEvent>();
         while (resultSet.next()) {
-            IncomingBankConnectionEvent event = new IncomingBankConnectionEvent();
+            BankConnectionEvent event = new BankConnectionEvent();
             event.ConnectionType = resultSet.getInt(
-                    IncomingBankConnectionEvent.COLUMN_NAME_CONNECTION_TYPE);
+                    BankConnectionEvent.COLUMN_NAME_CONNECTION_TYPE);
             event.ConnectionState = resultSet.getString(
-                    IncomingBankConnectionEvent.COLUMN_NAME_CONNECTION_STATE);
+                    BankConnectionEvent.COLUMN_NAME_CONNECTION_STATE);
             event.BankFeedProvider = resultSet.getInt(
-                    IncomingBankConnectionEvent.COLUMN_NAME_BANKFEED_PROVIDER);
+                    BankConnectionEvent.COLUMN_NAME_BANKFEED_PROVIDER);
             event.BfpProvidedBankConnectionId = resultSet.getLong(
-                    IncomingBankConnectionEvent.COLUMN_NAME_BFP_PROVIDED_BANK_CONNECTION_ID);
+                    BankConnectionEvent.COLUMN_NAME_BFP_PROVIDED_BANK_CONNECTION_ID);
             event.ErrorCode = resultSet.getString(
-                    IncomingBankConnectionEvent.COLUMN_NAME_ERROR_CODE);
+                    BankConnectionEvent.COLUMN_NAME_ERROR_CODE);
             event.ErrorDescription = resultSet.getString(
-                    IncomingBankConnectionEvent.COLUMN_NAME_ERROR_DESCRIPTION);
+                    BankConnectionEvent.COLUMN_NAME_ERROR_DESCRIPTION);
             event.FinancialInstitutionId = resultSet.getInt(
-                    IncomingBankConnectionEvent.COLUMN_NAME_FINANCIAL_INSTITUTION_ID);
+                    BankConnectionEvent.COLUMN_NAME_FINANCIAL_INSTITUTION_ID);
             event.FinancialInstitutionName = resultSet.getString(
-                    IncomingBankConnectionEvent.COLUMN_NAME_FINANCIAL_INSTITUTION_NAME);
+                    BankConnectionEvent.COLUMN_NAME_FINANCIAL_INSTITUTION_NAME);
             event.HttpStatusCode = resultSet.getInt(
-                    IncomingBankConnectionEvent.COLUMN_NAME_HTTP_STATUS_CODE);
-            //event.IsAuthEnabled = resultSet.getBoolean(IncomingBankConnectionEvent.COLUMN_NAME_IS_AUTH_ENABLED);
+                    BankConnectionEvent.COLUMN_NAME_HTTP_STATUS_CODE);
+            //event.IsAuthEnabled = resultSet.getBoolean(BankConnectionEvent.COLUMN_NAME_IS_AUTH_ENABLED);
             event.RequestTime = resultSet.getLong(
-                    IncomingBankConnectionEvent.COLUMN_NAME_REQUEST_TIME);
-            event.EventCreationTime = resultSet.getTimestamp(IncomingBankConnectionEvent.COLUMN_NAME_EVENT_CREATION_TIME);
+                    BankConnectionEvent.COLUMN_NAME_REQUEST_TIME);
+            event.EventCreationTime = resultSet.getTimestamp(BankConnectionEvent.COLUMN_NAME_EVENT_CREATION_TIME);
             event.Status = resultSet.getInt(
-                    IncomingBankConnectionEvent.COLUMN_NAME_STATUS);
+                    BankConnectionEvent.COLUMN_NAME_STATUS);
             event.UserId = resultSet.getLong(
-                    IncomingBankConnectionEvent.COLUMN_NAME_USERID);
+                    BankConnectionEvent.COLUMN_NAME_USERID);
             event.UserProvidedBankConnectionId = resultSet.getLong(
-                    IncomingBankConnectionEvent.COLUMN_NAME_USER_PROVIDED_BANK_CONNECTION_ID);
+                    BankConnectionEvent.COLUMN_NAME_USER_PROVIDED_BANK_CONNECTION_ID);
 
             eventList.add(event);
         }

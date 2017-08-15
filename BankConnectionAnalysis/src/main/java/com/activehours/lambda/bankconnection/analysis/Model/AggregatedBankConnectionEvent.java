@@ -1,8 +1,10 @@
-package com.activehours.lambda.bankconnection.analysis.Model.aggregated;
+package com.activehours.lambda.bankconnection.analysis.Model;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class UserBankConnectionEvent {
+import java.sql.Timestamp;
+
+public class AggregatedBankConnectionEvent {
 
     @JsonProperty("user_id")
     public long UserId;
@@ -33,4 +35,7 @@ public class UserBankConnectionEvent {
 
     @JsonProperty("fin_ins_name")
     public String FinancialInsName;
+
+    @JsonProperty("created_at")
+    public Timestamp CreatedAt;
 }

@@ -12,7 +12,9 @@ import java.io.InputStream;
 import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -52,7 +54,7 @@ public class S3Uploader {
 
     public void FinalizeAndAddPartition(Connection connection) {
         writeToS3(mS3ObjectList);
-        //addPartition(connection);
+        addPartition(connection);
     }
 
     public void uploadEvent(Object s3Event){
@@ -86,7 +88,9 @@ public class S3Uploader {
 
         String key = mDestinationS3Folder + UUID.randomUUID().toString();
         try {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             ObjectMapper mapper = new ObjectMapper();
+            mapper.setDateFormat(df);
             StringBuilder builder = new StringBuilder();
             for(Object s3Obj: s3ObjectList) {
                 builder.append(mapper.writeValueAsString(s3Obj));

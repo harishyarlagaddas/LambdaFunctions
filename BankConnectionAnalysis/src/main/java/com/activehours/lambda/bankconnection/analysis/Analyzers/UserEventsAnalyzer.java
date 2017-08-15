@@ -1,10 +1,10 @@
 package com.activehours.lambda.bankconnection.analysis.Analyzers;
 
 
-import com.activehours.lambda.bankconnection.analysis.Model.Incoming.ConnectionStatus;
-import com.activehours.lambda.bankconnection.analysis.Model.Incoming.ConnectionType;
-import com.activehours.lambda.bankconnection.analysis.Model.Incoming.IncomingBankConnectionEvent;
-import com.activehours.lambda.bankconnection.analysis.Model.aggregated.UserBankConnectionEvent;
+import com.activehours.lambda.bankconnection.analysis.Model.BankConnectionEvent;
+import com.activehours.lambda.bankconnection.analysis.Model.ConnectionStatus;
+import com.activehours.lambda.bankconnection.analysis.Model.ConnectionType;
+import com.activehours.lambda.bankconnection.analysis.Model.AggregatedBankConnectionEvent;
 import com.activehours.lambda.bankconnection.analysis.S3Uploader;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class UserEventsAnalyzer implements Analyzer {
+public class UserEventsAnalyzer implements EventsAnalyzer {
     private S3Uploader mS3Uploader;
 
     public UserEventsAnalyzer(S3Uploader s3Uploader) {
@@ -24,7 +24,7 @@ public class UserEventsAnalyzer implements Analyzer {
 
     @Override
     public void AnalyzeEvents(
-            List<IncomingBankConnectionEvent> events,
+            List<BankConnectionEvent> events,
             Connection connection, LambdaLogger logger) {
 
         if (0 == events.size()) {
@@ -32,28 +32,26 @@ public class UserEventsAnalyzer implements Analyzer {
         }
 
         List<Integer> providers = events.stream().map(
-                IncomingBankConnectionEvent::getBankFeedProvider).distinct().collect(Collectors.toList());
+                BankConnectionEvent::getBankFeedProvider).distinct().collect(Collectors.toList());
 
         for (int provider: providers) {
-            Stream<IncomingBankConnectionEvent> providerEventStream = events.stream()
+            Stream<BankConnectionEvent> providerEventStream = events.stream()
                     .filter(event -> event.BankFeedProvider == provider);
-            List<IncomingBankConnectionEvent> filteredProviderList = providerEventStream.collect(Collectors.toList());
+            List<BankConnectionEvent> filteredProviderList = providerEventStream.collect(Collectors.toList());
 
             List<Integer> financialInsIds = filteredProviderList.stream().map(
-                    IncomingBankConnectionEvent::getFinancialInstitutionId).distinct().collect(Collectors.toList());
+                    BankConnectionEvent::getFinancialInstitutionId).distinct().collect(Collectors.toList());
 
             for (int finInsId: financialInsIds) {
-                Stream<IncomingBankConnectionEvent> finEventStream = filteredProviderList.stream()
+                Stream<BankConnectionEvent> finEventStream = filteredProviderList.stream()
                         .filter(event -> event.FinancialInstitutionId == finInsId);
-                List<IncomingBankConnectionEvent> filteredFinInsList = finEventStream.collect(Collectors.toList());
-                logger.log("ProcessUserEvents events size: "+filteredFinInsList.size()
-                        +" with Provider: "+provider+" FinancialInsId: "+finInsId);
+                List<BankConnectionEvent> filteredFinInsList = finEventStream.collect(Collectors.toList());
                 processUserEvents(filteredFinInsList, logger);
             }
         }
     }
 
-    private void processUserEvents(List<IncomingBankConnectionEvent> userEvents, LambdaLogger logger) {
+    private void processUserEvents(List<BankConnectionEvent> userEvents, LambdaLogger logger) {
         if (0 == userEvents.size()) {
             logger.log("UserEventsAnalyzer:ProcessUserEvents incoming userEvents is of zero size");
         }
@@ -61,14 +59,16 @@ public class UserEventsAnalyzer implements Analyzer {
         //First sort the list based on eventTIme
         Collections.sort(userEvents, Comparator.comparing(o -> o.EventCreationTime));
 
-        UserBankConnectionEvent bankConnectionEvent = new UserBankConnectionEvent();
+        AggregatedBankConnectionEvent bankConnectionEvent = new AggregatedBankConnectionEvent();
 
         // Since for all these events userId, provider and financialInsId are same get from 1st event.
-        IncomingBankConnectionEvent firstEvent = userEvents.get(0);
+        BankConnectionEvent firstEvent = userEvents.get(0);
         bankConnectionEvent.UserId = firstEvent.UserId;
         bankConnectionEvent.Provider = firstEvent.BankFeedProvider;
         bankConnectionEvent.FinancialInsId = firstEvent.FinancialInstitutionId;
         bankConnectionEvent.FinancialInsName = firstEvent.FinancialInstitutionName;
+        bankConnectionEvent.CreatedAt = firstEvent.EventCreationTime;
+
         bankConnectionEvent.NumberOfMfas = (int)
                 userEvents.stream().filter(event -> event.Status == ConnectionStatus.Mfa.getVal()).count();
         bankConnectionEvent.NumberOfCreateConnections = (int)
@@ -77,7 +77,7 @@ public class UserEventsAnalyzer implements Analyzer {
                 userEvents.stream().filter(event -> event.ConnectionType == ConnectionType.Update.getVal()).count();
 
         // Assign the final connection state, error codes and error descriptions and ignore all the previous ones
-        IncomingBankConnectionEvent finalEvent = userEvents.get(userEvents.size()-1);
+        BankConnectionEvent finalEvent = userEvents.get(userEvents.size()-1);
         bankConnectionEvent.ConnectionState = finalEvent.ConnectionState;
         bankConnectionEvent.ErrorCode = finalEvent.ErrorCode;
         bankConnectionEvent.ErrorDescription = finalEvent.ErrorDescription;

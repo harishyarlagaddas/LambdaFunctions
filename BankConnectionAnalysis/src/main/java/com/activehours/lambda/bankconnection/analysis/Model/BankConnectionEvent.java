@@ -1,9 +1,9 @@
-package com.activehours.lambda.bankconnection.analysis.Model.Incoming;
+package com.activehours.lambda.bankconnection.analysis.Model;
 
 import java.sql.Timestamp;
 import java.util.Date;
 
-public class IncomingBankConnectionEvent {
+public class BankConnectionEvent {
 
     public static final String COLUMN_NAME_ROW_NUMBER = "RowNumber";
     public static final String COLUMN_NAME_CONNECTION_TYPE = "conn_type";
