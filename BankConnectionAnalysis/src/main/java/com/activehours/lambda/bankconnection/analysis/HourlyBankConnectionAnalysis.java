@@ -15,7 +15,7 @@ public class HourlyBankConnectionAnalysis implements RequestHandler<Object, Stri
 	private static boolean mProductionEnvironment = true;
 
 	// Production Environment Variables..
-	static String PRODUCTION_SOURCE_DATA_ATHENA_TABLE_NAME = "bankconnection_events_db.bankconnection_events_prod_2";
+	static String PRODUCTION_SOURCE_DATA_ATHENA_TABLE_NAME = "bankconnection_events_db.bankconnection_events_prod_3";
 	static String PRODUCTION_SOURCE_DATA_S3_BUCKET_NAME = "ah-firehose-bankconnection-events-prod";
 
     // Test Environment Variables..

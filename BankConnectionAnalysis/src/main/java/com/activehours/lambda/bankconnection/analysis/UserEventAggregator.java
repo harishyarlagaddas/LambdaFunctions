@@ -2,6 +2,8 @@ package com.activehours.lambda.bankconnection.analysis;
 
 import com.activehours.lambda.bankconnection.analysis.Analyzers.UserEventsAnalyzer;
 import com.activehours.lambda.bankconnection.analysis.Model.BankConnectionEvent;
+import com.activehours.lambda.bankconnection.analysis.Model.EventCategory;
+import com.activehours.lambda.bankconnection.analysis.Model.EventType;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 
 import java.io.PrintWriter;
@@ -33,6 +35,10 @@ public class UserEventAggregator {
                     +AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_MONTH+") AND day IN ("
                     +AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_DAY+") AND hour IN ("
                     +AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_HOUR+") AND "
+                    +BankConnectionEvent.COLUMN_NAME_EVENT_TYPE+" IN ("
+                    + EventType.BankConnectionEvent.getVal()+") AND "
+                    +BankConnectionEvent.COLUMN_NAME_EVENT_CATEGORY+" IN ("
+                    + EventCategory.BankConnectionAnalysis.getVal()+") AND "
                     + BankConnectionEvent.COLUMN_NAME_EVENT_CREATION_TIME
                     +" BETWEEN timestamp '"
                     +AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_FROM_TIME+"' AND timestamp '"
@@ -45,6 +51,10 @@ public class UserEventAggregator {
             +AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_MONTH+") AND day IN ("
             +AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_DAY+") AND hour IN ("
             +AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_HOUR+") AND "
+            +BankConnectionEvent.COLUMN_NAME_EVENT_TYPE+" IN ("
+            + EventType.BankConnectionEvent.getVal()+") AND "
+            +BankConnectionEvent.COLUMN_NAME_EVENT_CATEGORY+" IN ("
+            + EventCategory.BankConnectionAnalysis.getVal()+") AND "
             + BankConnectionEvent.COLUMN_NAME_USERID+" IN ("
             +AthenaUtils.SQL_STATEMENT_PLACE_HOLDER_USER_IDS+")";
 

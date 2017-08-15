@@ -15,40 +15,8 @@
       <file leaf-file-name="HourlyBankConnectionAnalysis.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/HourlyBankConnectionAnalysis.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="389">
-              <caret line="63" column="66" lean-forward="false" selection-start-line="63" selection-start-column="47" selection-end-line="63" selection-end-column="66" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AggregatedBankConnectionEvent.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/AggregatedBankConnectionEvent.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="756">
-              <caret line="38" column="29" lean-forward="false" selection-start-line="38" selection-start-column="19" selection-end-line="38" selection-end-column="29" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BankConnectionEventType.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/BankConnectionEventType.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="42">
-              <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ConnectionStatus.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/ConnectionStatus.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="42">
-              <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
+            <state relative-caret-position="189">
+              <caret line="17" column="115" lean-forward="false" selection-start-line="17" selection-start-column="115" selection-end-line="17" selection-end-column="115" />
               <folding />
             </state>
           </provider>
@@ -57,11 +25,61 @@
       <file leaf-file-name="UserEventAggregator.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/UserEventAggregator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="567">
-              <caret line="27" column="49" lean-forward="false" selection-start-line="27" selection-start-column="18" selection-end-line="27" selection-end-column="49" />
+            <state relative-caret-position="609">
+              <caret line="56" column="59" lean-forward="false" selection-start-line="56" selection-start-column="59" selection-end-line="56" selection-end-column="59" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EventType.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/EventType.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EventCategory.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/EventCategory.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="189">
+              <caret line="13" column="5" lean-forward="true" selection-start-line="6" selection-start-column="4" selection-end-line="13" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AthenaUtils.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/AthenaUtils.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2919">
+              <caret line="149" column="86" lean-forward="false" selection-start-line="149" selection-start-column="86" selection-end-line="149" selection-end-column="86" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BankConnectionEvent.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/BankConnectionEvent.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="609">
+              <caret line="30" column="28" lean-forward="true" selection-start-line="30" selection-start-column="28" selection-end-line="30" selection-end-column="28" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ConnectionType.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/ConnectionType.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="14" column="5" lean-forward="true" selection-start-line="7" selection-start-column="4" selection-end-line="14" selection-end-column="5" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -71,26 +89,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="105">
               <caret line="23" column="67" lean-forward="false" selection-start-line="23" selection-start-column="63" selection-end-line="23" selection-end-column="67" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="EventsAnalyzer.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Analyzers/EventsAnalyzer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="84">
-              <caret line="8" column="17" lean-forward="false" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ConnectionType.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/ConnectionType.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="42">
-              <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -109,7 +107,7 @@
       <file leaf-file-name="UserEventsAnalyzer.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Analyzers/UserEventsAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1407">
+            <state relative-caret-position="1155">
               <caret line="69" column="37" lean-forward="false" selection-start-line="69" selection-start-column="28" selection-end-line="69" selection-end-column="37" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -146,7 +144,6 @@
         <option value="$PROJECT_DIR$/src/test/java/com/activehours/lambda/bankconnection/analysis/HourlyBankConnectionAnalysisTest.java" />
         <option value="$MAVEN_REPOSITORY$/com/amazonaws/aws-java-sdk-s3/1.11.124/aws-java-sdk-s3-1.11.124.jar!/com/amazonaws/services/s3/model/PutObjectRequest.class" />
         <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/BankConnectionEventType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/BankConnectionEvent.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/BankConnectionErrorEvent.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Analyzers/Analyzer.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/IncomingBankConnectionEvent.java" />
@@ -158,15 +155,18 @@
         <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Analyzers/ErrorsAnalyzer.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Analyzers/ConnectionStateAnalyzer.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/aggregated/UserBankConnectionEvent.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/AthenaUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/Incoming/IncomingBankConnectionEvent.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Analyzers/AggregateUserEventsAnalyzer.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/ProviderType.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Analyzers/UserEventAggregator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/HourlyBankConnectionAnalysis.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/AggregatedBankConnectionEvent.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Analyzers/UserEventsAnalyzer.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/S3Uploader.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/BankConnectionEvent.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/AthenaUtils.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/EventCategory.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/EventType.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/HourlyBankConnectionAnalysis.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/UserEventAggregator.java" />
       </list>
     </option>
@@ -192,10 +192,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="AndroidView" />
-      <pane id="Scratches" />
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -279,6 +275,10 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="AndroidView" />
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -515,31 +515,12 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/ConnectionStatus.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/activehours/lambda/bankconnection/analysis/HourlyBankConnectionAnalysisTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1386">
-          <caret line="66" column="77" lean-forward="false" selection-start-line="66" selection-start-column="12" selection-end-line="66" selection-end-column="77" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/Analyzed/BankConnectionAnalysisEvent.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/BankConnectionEvent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="903">
           <caret line="48" column="31" lean-forward="false" selection-start-line="48" selection-start-column="31" selection-end-line="48" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -581,9 +562,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="903">
           <caret line="48" column="31" lean-forward="false" selection-start-line="48" selection-start-column="31" selection-end-line="48" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -625,9 +604,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="903">
           <caret line="48" column="31" lean-forward="false" selection-start-line="48" selection-start-column="31" selection-end-line="48" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -661,9 +638,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="612">
           <caret line="36" column="34" lean-forward="false" selection-start-line="36" selection-start-column="34" selection-end-line="36" selection-end-column="34" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -686,9 +661,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="612">
           <caret line="36" column="34" lean-forward="false" selection-start-line="36" selection-start-column="34" selection-end-line="36" selection-end-column="34" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -743,25 +716,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/AthenaUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="143" column="32" lean-forward="false" selection-start-line="143" selection-start-column="32" selection-end-line="143" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/Analyzed/BankConnectionAnalysisEvent.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/BankConnectionEvent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="5" column="13" lean-forward="false" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/BankConnectionEventType.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="42">
@@ -771,22 +726,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/ConnectionStatus.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/ConnectionType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/ProviderType.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="42">
           <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
@@ -814,7 +753,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Analyzers/UserEventsAnalyzer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1407">
+        <state relative-caret-position="1155">
           <caret line="69" column="37" lean-forward="false" selection-start-line="69" selection-start-column="28" selection-end-line="69" selection-end-column="37" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -830,18 +769,66 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/AthenaUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2919">
+          <caret line="149" column="86" lean-forward="false" selection-start-line="149" selection-start-column="86" selection-end-line="149" selection-end-column="86" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/ProviderType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="42">
+          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/BankConnectionEvent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="609">
+          <caret line="30" column="28" lean-forward="true" selection-start-line="30" selection-start-column="28" selection-end-line="30" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/ConnectionType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="5" lean-forward="true" selection-start-line="7" selection-start-column="4" selection-end-line="14" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/EventCategory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="13" column="5" lean-forward="true" selection-start-line="6" selection-start-column="4" selection-end-line="13" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/Model/EventType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/HourlyBankConnectionAnalysis.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="389">
-          <caret line="63" column="66" lean-forward="false" selection-start-line="63" selection-start-column="47" selection-end-line="63" selection-end-column="66" />
+        <state relative-caret-position="189">
+          <caret line="17" column="115" lean-forward="false" selection-start-line="17" selection-start-column="115" selection-end-line="17" selection-end-column="115" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/activehours/lambda/bankconnection/analysis/UserEventAggregator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="567">
-          <caret line="27" column="49" lean-forward="false" selection-start-line="27" selection-start-column="18" selection-end-line="27" selection-end-column="49" />
+        <state relative-caret-position="609">
+          <caret line="56" column="59" lean-forward="false" selection-start-line="56" selection-start-column="59" selection-end-line="56" selection-end-column="59" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

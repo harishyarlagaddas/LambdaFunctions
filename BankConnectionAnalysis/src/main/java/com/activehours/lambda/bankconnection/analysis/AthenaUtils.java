@@ -148,7 +148,6 @@ public class AthenaUtils {
                     BankConnectionEvent.COLUMN_NAME_USERID);
             event.UserProvidedBankConnectionId = resultSet.getLong(
                     BankConnectionEvent.COLUMN_NAME_USER_PROVIDED_BANK_CONNECTION_ID);
-
             eventList.add(event);
         }
         return eventList;

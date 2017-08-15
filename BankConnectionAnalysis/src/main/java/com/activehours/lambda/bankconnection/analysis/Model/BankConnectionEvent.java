@@ -7,6 +7,8 @@ public class BankConnectionEvent {
 
     public static final String COLUMN_NAME_ROW_NUMBER = "RowNumber";
     public static final String COLUMN_NAME_CONNECTION_TYPE = "conn_type";
+    public static final String COLUMN_NAME_EVENT_TYPE = "event_type";
+    public static final String COLUMN_NAME_EVENT_CATEGORY = "event_category";
     public static final String COLUMN_NAME_IS_AUTH_ENABLED = "auth_enabled";
     public static final String COLUMN_NAME_ERROR_CODE = "provider_error_code";
     public static final String COLUMN_NAME_ERROR_DESCRIPTION = "provider_error_description";
@@ -23,6 +25,8 @@ public class BankConnectionEvent {
     public static final String COLUMN_NAME_CONNECTION_STATE = "conn_state";
 
     public int ConnectionType;
+    public int EventType;
+    public int EventCategory;
     public boolean IsAuthEnabled;
     public String ErrorCode;
     public String ErrorDescription;
